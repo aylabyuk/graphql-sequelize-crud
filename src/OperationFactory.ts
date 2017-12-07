@@ -176,12 +176,11 @@ export class OperationFactory {
 
         const queryArgs = defaultArgs(model);
         convertFieldsToGlobalId(model, queryArgs);
-        
         // remove arguments other than id and where
-        for(let key of Object.keys(queryArgs)) {
-            if(key != 'id' && key != 'where')
-                delete queryArgs[key]
-            
+        for (const key of Object.keys(queryArgs)) {
+            if (key !== 'id' && key !== 'where') {
+                delete queryArgs[key];
+            }
         }
 
         const baseResolve = resolver(model, {});
