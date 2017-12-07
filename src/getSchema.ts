@@ -286,7 +286,7 @@ export function getSchema(sequelize: Sequelize) {
             root: {
                 // Cite: https://github.com/facebook/relay/issues/112#issuecomment-170648934
                 type: new GraphQLNonNull(queryRoot),
-                description: "Self-Pointer from Root to Root",
+                description: "Self Pointer from Root to Root",
                 resolve: () => ({})
             },
             ...queries,

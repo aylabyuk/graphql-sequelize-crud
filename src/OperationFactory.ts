@@ -187,6 +187,9 @@ export class OperationFactory {
             return baseResolve(source, args, context, info);
         };
 
+        // tslint:disable-next-line:no-console
+        console.log(model.getTableName(), queryArgs)
+
         queries[findByIdQueryName] = {
             type: modelType,
             args: queryArgs,
