@@ -176,6 +176,13 @@ export class OperationFactory {
 
         const queryArgs = defaultArgs(model);
         convertFieldsToGlobalId(model, queryArgs);
+        
+        // remove arguments other than id and where
+        for(let key of Object.keys(queryArgs)) {
+            if(key != 'id' && key != 'where')
+                delete queryArgs[key]
+            
+        }
 
         const baseResolve = resolver(model, {});
         // tslint:disable-next-line:max-func-args
@@ -188,7 +195,7 @@ export class OperationFactory {
         };
 
         // tslint:disable-next-line:no-console
-        console.log(model.getTableName(), queryArgs)
+        // console.log(model.getTableName(), queryArgs)
 
         queries[findByIdQueryName] = {
             type: modelType,
