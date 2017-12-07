@@ -194,7 +194,7 @@ export class OperationFactory {
         };
 
         // tslint:disable-next-line:no-console
-        // console.log(model.getTableName(), queryArgs)
+        // console.log(resolve.toString())
 
         queries[findByIdQueryName] = {
             type: modelType,
