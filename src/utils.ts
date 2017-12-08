@@ -10,7 +10,7 @@ import {
     GraphQLList,
     GraphQLType,
     GraphQLInputType,
-    GraphQLFieldResolver,
+    GraphQLFieldResolver
 } from 'graphql';
 import {
     fromGlobalId,
@@ -161,3 +161,15 @@ export function createNonNullListResolver(resolver: GraphQLFieldResolver<any, an
             });
     };
 }
+
+export function createResolver(resolver: any) {
+    const baseResolver = resolver;
+    baseResolver.createResolver = (childResolver: any) => {
+      const newResolver = async (source: any, args: any, context: any, info: any) => {
+        await resolver(source, args, context, info);
+        return childResolver(source, args, context, info);
+      };
+      return createResolver(newResolver);
+    };
+    return baseResolver;
+};

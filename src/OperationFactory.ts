@@ -173,7 +173,7 @@ export class OperationFactory {
             modelType: GraphQLObjectType;
         }) {
         const findByIdQueryName = queryName(model, 'findById');
-
+        
         const queryArgs = defaultArgs(model);
         convertFieldsToGlobalId(model, queryArgs);
         // remove arguments other than id and where
@@ -206,18 +206,21 @@ export class OperationFactory {
     public findAll({
         queries,
         model,
-        modelType
+        modelType,
+        hooks
     }: {
             model: Model;
             modelType: GraphQLObjectType;
             queries: Queries;
+            hooks?: HookObject;
         }) {
         const findAllQueryName = queryName(model, 'findAll');
+
         const queryArgs = defaultListArgs(model);
 
         const baseResolve = createNonNullListResolver(resolver(model, { list: true }));
         // tslint:disable-next-line:max-func-args
-        const resolve: GraphQLFieldResolver<any, any> = (source, args, context, info) => {
+        var resolve: GraphQLFieldResolver<any, any> = (source, args, context, info) => {
             if (args.where) {
                 convertFieldsFromGlobalId(model, args.where);
             }
@@ -227,10 +230,18 @@ export class OperationFactory {
             return baseResolve(source, args, context, info);
         };
 
+        if (hooks) {
+            if(findAllQueryName in hooks) {
+                resolve = hooks[findAllQueryName].before.createResolver((source: any, args: any, context: any, info: any) => { 
+                    resolve
+                })
+            }
+        }
+
         queries[findAllQueryName] = {
             type: createNonNullList(modelType),
             args: queryArgs,
-            resolve,
+            resolve
         };
     }
 
@@ -670,10 +681,18 @@ export interface Mutations extends GraphQLFieldConfigMap<any, any> {
     [mutationName: string]: GraphQLFieldConfig<any, any>;
 }
 
+export interface HookObject {
+    [operationName: string]: {
+        before?: any;
+        after?: any;
+    }
+}
+
 export interface OperationFactoryConfig {
     models: Models;
     modelTypes: ModelTypes;
     associationsToModel: AssociationToModels;
     associationsFromModel: AssociationFromModels;
     cache: Cache;
+    hooks?: HookObject;
 }

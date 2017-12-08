@@ -36,13 +36,14 @@ import {
     AssociationFromModels,
     Queries,
     Mutations,
+    HookObject
 } from "./OperationFactory";
 import {
     getTableName,
     connectionNameForAssociation,
 } from "./utils";
 
-export function getSchema(sequelize: Sequelize) {
+export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
 
     const { nodeInterface, nodeField, nodeTypeMapper } = sequelizeNodeInterface(sequelize);
 
@@ -102,7 +103,7 @@ export function getSchema(sequelize: Sequelize) {
             models,
             modelTypes: types,
             associationsFromModel,
-            associationsToModel,
+            associationsToModel
         });
         // CREATE single
         operationFactory.createRecord({
@@ -115,7 +116,7 @@ export function getSchema(sequelize: Sequelize) {
         operationFactory.findRecord({
             queries,
             model,
-            modelType,
+            modelType
         });
 
         // READ all
@@ -123,6 +124,7 @@ export function getSchema(sequelize: Sequelize) {
             queries,
             model,
             modelType,
+            hooks
         });
 
         // UPDATE single
@@ -280,7 +282,7 @@ export function getSchema(sequelize: Sequelize) {
     });
 
     const queryRoot: GraphQLObjectType = new GraphQLObjectType({
-        name: "Root",
+        name: "Query",
         description: "Root of the Schema",
         fields: () => ({
             root: {
