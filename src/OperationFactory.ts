@@ -186,6 +186,7 @@ export class OperationFactory {
         const baseResolve = resolver(model, {});
         // tslint:disable-next-line:max-func-args
         const resolve: GraphQLFieldResolver<any, any> = (source, args, context, info) => {
+
             convertFieldsFromGlobalId(model, args);
             if (args.where) {
                 convertFieldsFromGlobalId(model, args.where);
@@ -221,6 +222,27 @@ export class OperationFactory {
         const baseResolve = createNonNullListResolver(resolver(model, { list: true }));
         // tslint:disable-next-line:max-func-args
         var resolve: GraphQLFieldResolver<any, any> = (source, args, context, info) => {
+
+            if(hooks) {
+                console.log(findAllQueryName)
+                if(findAllQueryName in hooks) {
+                    model.beforeFind(m => {
+                        var check = hooks[findAllQueryName].before(context)
+
+                        console.log('CONTEXT: ',context)
+                        console.log('CHECK: ', check)
+
+                        if(!check.result) {
+                            throw new Error(check.message)
+                        }
+                    })
+
+                    model.afterFind(m => {
+                        model.removeHook('beforeFind', 'removeAfterFindHook')
+                    })
+                }
+            }
+
             if (args.where) {
                 convertFieldsFromGlobalId(model, args.where);
             }
@@ -229,14 +251,6 @@ export class OperationFactory {
             }
             return baseResolve(source, args, context, info);
         };
-
-        if (hooks) {
-            if(findAllQueryName in hooks) {
-                resolve = hooks[findAllQueryName].before.createResolver((source: any, args: any, context: any, info: any) => { 
-                    resolve
-                })
-            }
-        }
 
         queries[findAllQueryName] = {
             type: createNonNullList(modelType),
