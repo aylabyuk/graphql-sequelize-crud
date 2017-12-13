@@ -608,7 +608,11 @@ export class OperationFactory {
                     }
                 };
             },
-            mutateAndGetPayload: (data) => {
+            mutateAndGetPayload: (data, context) => {
+
+                const deleteMutationName = mutationName(model, 'delete');
+                this.checkBeforeHooks({operationName: deleteMutationName, context: context})
+
                 const { where } = data;
                 convertFieldsFromGlobalId(model, where);
                 return model.destroy({
@@ -654,7 +658,11 @@ export class OperationFactory {
                     }
                 };
             },
-            mutateAndGetPayload: (data) => {
+            mutateAndGetPayload: (data, context) => {
+
+                const deleteMutationName = mutationName(model, 'deleteOne');
+                this.checkBeforeHooks({operationName: deleteMutationName, context: context})
+
                 const where = {
                     [model.primaryKeyAttribute]: data[model.primaryKeyAttribute]
                 };
