@@ -47,6 +47,24 @@ export class OperationFactory {
     private associationsToModel: AssociationToModels;
     private associationsFromModel: AssociationFromModels;
     private cache: Cache;
+    private hooks?: HookObject;
+
+    private checkBeforeHooks({
+        operationName,
+        context
+    }: {
+            operationName: string,
+            context: any
+        }) {
+            if(this.hooks) {
+                if(operationName in this.hooks) {
+                    var check = Promise.resolve(this.hooks[operationName].before(context))
+                    check.catch((err) => {
+                        return err
+                    })
+                }
+            }
+        }
 
     constructor(config: OperationFactoryConfig) {
         this.models = config.models;
@@ -54,6 +72,7 @@ export class OperationFactory {
         this.associationsToModel = config.associationsToModel;
         this.associationsFromModel = config.associationsFromModel;
         this.cache = config.cache;
+        this.hooks = config.hooks;
     }
 
     public createRecord({
@@ -187,6 +206,8 @@ export class OperationFactory {
         // tslint:disable-next-line:max-func-args
         const resolve: GraphQLFieldResolver<any, any> = (source, args, context, info) => {
 
+            this.checkBeforeHooks({operationName: findByIdQueryName, context})
+
             convertFieldsFromGlobalId(model, args);
             if (args.where) {
                 convertFieldsFromGlobalId(model, args.where);
@@ -222,16 +243,8 @@ export class OperationFactory {
         const baseResolve = createNonNullListResolver(resolver(model, { list: true }));
         // tslint:disable-next-line:max-func-args
         var resolve: GraphQLFieldResolver<any, any> = (source, args, context, info) => {
-            
-            if(hooks) {
-                if(findAllQueryName in hooks) {
-                    var check = Promise.resolve(hooks[findAllQueryName].before(context))
-                    check.catch((err) => {
-                        return err
-                    })
 
-                }
-            }
+            this.checkBeforeHooks({operationName: findAllQueryName, context})
 
             if (args.where) {
                 convertFieldsFromGlobalId(model, args.where);

@@ -103,7 +103,8 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
             models,
             modelTypes: types,
             associationsFromModel,
-            associationsToModel
+            associationsToModel,
+            hooks
         });
         // CREATE single
         operationFactory.createRecord({
@@ -116,7 +117,7 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
         operationFactory.findRecord({
             queries,
             model,
-            modelType
+            modelType,
         });
 
         // READ all
@@ -124,7 +125,6 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
             queries,
             model,
             modelType,
-            hooks
         });
 
         // UPDATE single
