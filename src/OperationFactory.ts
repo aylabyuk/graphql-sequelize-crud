@@ -115,6 +115,7 @@ export class OperationFactory {
             },
             outputFields: () => {
                 const output: GraphQLFieldConfigMap<any, any> = {};
+
                 // New Record
                 output[camelcase(`new_${getTableName(model)}`)] = {
                     type: modelType,
@@ -172,10 +173,15 @@ export class OperationFactory {
                     }
                 });
                 // console.log(`${getTableName(Model)} mutation output`, output);
+                
                 return output;
             },
-            mutateAndGetPayload: (data) => {
+            mutateAndGetPayload: (data, context) => {
                 convertFieldsFromGlobalId(model, data);
+                const createMutationName = mutationName(model, 'create');
+
+                this.checkBeforeHooks({operationName: createMutationName, context: context})
+
                 return model.create(data);
             }
         });
