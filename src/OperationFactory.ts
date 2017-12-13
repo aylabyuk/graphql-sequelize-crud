@@ -177,11 +177,10 @@ export class OperationFactory {
                 return output;
             },
             mutateAndGetPayload: (data, context) => {
-                convertFieldsFromGlobalId(model, data);
                 const createMutationName = mutationName(model, 'create');
-
                 this.checkBeforeHooks({operationName: createMutationName, context: context})
 
+                convertFieldsFromGlobalId(model, data);
                 return model.create(data);
             }
         });
@@ -406,7 +405,10 @@ export class OperationFactory {
                     }
                 };
             },
-            mutateAndGetPayload: (data) => {
+            mutateAndGetPayload: (data, context) => {
+                const updateMutationName = mutationName(model, 'update');
+                this.checkBeforeHooks({operationName: updateMutationName, context: context})
+
                 // console.log('mutate', data);
                 const { values, where } = data;
                 convertFieldsFromGlobalId(model, values);
@@ -539,7 +541,10 @@ export class OperationFactory {
                 return output;
 
             },
-            mutateAndGetPayload: (data) => {
+            mutateAndGetPayload: (data, context) => {
+                const updateMutationName = mutationName(model, 'updateOne');
+                this.checkBeforeHooks({operationName: updateMutationName, context: context})
+
                 // console.log('mutate', data);
                 const { values } = data;
                 const where = {
