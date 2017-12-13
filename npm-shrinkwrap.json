@@ -5,9 +5,9 @@
   "requires": true,
   "dependencies": {
     "@types/bluebird": {
-      "version": "3.5.16",
-      "resolved": "https://registry.npmjs.org/@types/bluebird/-/bluebird-3.5.16.tgz",
-      "integrity": "sha512-957wyvA86h7pv69cIGUQ1s5RKWFFuU4EyRQCV33TvL0oeJxM9L4hIKW9iomOf+HSEeKysG4RkNnPlhUvOtbHPg==",
+      "version": "3.5.18",
+      "resolved": "https://registry.npmjs.org/@types/bluebird/-/bluebird-3.5.18.tgz",
+      "integrity": "sha512-OTPWHmsyW18BhrnG5x8F7PzeZ2nFxmHGb42bZn79P9hl+GI5cMzyPgQTwNjbem0lJhoru/8vtjAFCUOu3+gE2w==",
       "dev": true
     },
     "@types/camelcase": {
@@ -107,7 +107,7 @@
       "integrity": "sha512-bRZi3bnSnwLtFuc8yoSN9ApwjTI+uMUkgQiBCcOn01wDFc0nSY4f74U62+dgs+rSR+cAxXbvOU1t6/NLm8r5vA==",
       "dev": true,
       "requires": {
-        "@types/bluebird": "3.5.16",
+        "@types/bluebird": "3.5.18",
         "@types/lodash": "4.14.77",
         "@types/validator": "6.3.0"
       }

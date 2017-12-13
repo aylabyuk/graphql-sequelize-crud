@@ -225,9 +225,11 @@ export class OperationFactory {
             
             if(hooks) {
                 if(findAllQueryName in hooks) {
-                    if(hooks[findAllQueryName].before(context)) {
-                        return hooks[findAllQueryName].before(context)
-                    }
+                    var check = Promise.resolve(hooks[findAllQueryName].before(context))
+                    check.catch((err) => {
+                        return err
+                    })
+
                 }
             }
 
