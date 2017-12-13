@@ -222,24 +222,12 @@ export class OperationFactory {
         const baseResolve = createNonNullListResolver(resolver(model, { list: true }));
         // tslint:disable-next-line:max-func-args
         var resolve: GraphQLFieldResolver<any, any> = (source, args, context, info) => {
-
+            
             if(hooks) {
-                console.log(findAllQueryName)
                 if(findAllQueryName in hooks) {
-                    model.beforeFind(m => {
-                        var check = hooks[findAllQueryName].before(context)
-
-                        console.log('CONTEXT: ',context)
-                        console.log('CHECK: ', check)
-
-                        if(!check.result) {
-                            throw new Error(check.message)
-                        }
-                    })
-
-                    model.afterFind(m => {
-                        model.removeHook('beforeFind', 'removeAfterFindHook')
-                    })
+                    if(hooks[findAllQueryName].before(context)) {
+                        return hooks[findAllQueryName].before(context)
+                    }
                 }
             }
 
