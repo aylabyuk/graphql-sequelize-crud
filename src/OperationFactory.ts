@@ -56,12 +56,12 @@ export class OperationFactory {
             operationName: string,
             context: any
         }) {
-            if(this.hooks) {
-                if(operationName in this.hooks) {
-                    var check = Promise.resolve(this.hooks[operationName].before(context))
+            if (this.hooks) {
+                if (operationName in this.hooks) {
+                    const check = Promise.resolve(this.hooks[operationName].before(context));
                     check.catch((err) => {
-                        return err
-                    })
+                        return err;
+                    });
                 }
             }
         }
@@ -173,12 +173,11 @@ export class OperationFactory {
                     }
                 });
                 // console.log(`${getTableName(Model)} mutation output`, output);
-                
                 return output;
             },
             mutateAndGetPayload: (data, context) => {
-                const createMutationName = mutationName(model, 'create');
-                this.checkBeforeHooks({operationName: createMutationName, context: context})
+                const operationName = mutationName(model, 'create');
+                this.checkBeforeHooks({operationName, context});
 
                 convertFieldsFromGlobalId(model, data);
                 return model.create(data);
@@ -197,7 +196,6 @@ export class OperationFactory {
             modelType: GraphQLObjectType;
         }) {
         const findByIdQueryName = queryName(model, 'findById');
-        
         const queryArgs = defaultArgs(model);
         convertFieldsToGlobalId(model, queryArgs);
         // remove arguments other than id and where
@@ -211,7 +209,7 @@ export class OperationFactory {
         // tslint:disable-next-line:max-func-args
         const resolve: GraphQLFieldResolver<any, any> = (source, args, context, info) => {
 
-            this.checkBeforeHooks({operationName: findByIdQueryName, context})
+            this.checkBeforeHooks({operationName: findByIdQueryName, context});
 
             convertFieldsFromGlobalId(model, args);
             if (args.where) {
@@ -247,9 +245,9 @@ export class OperationFactory {
 
         const baseResolve = createNonNullListResolver(resolver(model, { list: true }));
         // tslint:disable-next-line:max-func-args
-        var resolve: GraphQLFieldResolver<any, any> = (source, args, context, info) => {
+        const resolve: GraphQLFieldResolver<any, any> = (source, args, context, info) => {
 
-            this.checkBeforeHooks({operationName: findAllQueryName, context})
+            this.checkBeforeHooks({operationName: findAllQueryName, context});
 
             if (args.where) {
                 convertFieldsFromGlobalId(model, args.where);
@@ -406,8 +404,8 @@ export class OperationFactory {
                 };
             },
             mutateAndGetPayload: (data, context) => {
-                const updateMutationName = mutationName(model, 'update');
-                this.checkBeforeHooks({operationName: updateMutationName, context: context})
+                const operationName = mutationName(model, 'update');
+                this.checkBeforeHooks({operationName, context});
 
                 // console.log('mutate', data);
                 const { values, where } = data;
@@ -542,8 +540,8 @@ export class OperationFactory {
 
             },
             mutateAndGetPayload: (data, context) => {
-                const updateMutationName = mutationName(model, 'updateOne');
-                this.checkBeforeHooks({operationName: updateMutationName, context: context})
+                const operationName = mutationName(model, 'updateOne');
+                this.checkBeforeHooks({operationName, context});
 
                 // console.log('mutate', data);
                 const { values } = data;
@@ -610,8 +608,8 @@ export class OperationFactory {
             },
             mutateAndGetPayload: (data, context) => {
 
-                const deleteMutationName = mutationName(model, 'delete');
-                this.checkBeforeHooks({operationName: deleteMutationName, context: context})
+                const operationName = mutationName(model, 'delete');
+                this.checkBeforeHooks({operationName, context});
 
                 const { where } = data;
                 convertFieldsFromGlobalId(model, where);
@@ -660,8 +658,8 @@ export class OperationFactory {
             },
             mutateAndGetPayload: (data, context) => {
 
-                const deleteMutationName = mutationName(model, 'deleteOne');
-                this.checkBeforeHooks({operationName: deleteMutationName, context: context})
+                const operationName = mutationName(model, 'deleteOne');
+                this.checkBeforeHooks({operationName, context});
 
                 const where = {
                     [model.primaryKeyAttribute]: data[model.primaryKeyAttribute]
@@ -721,7 +719,7 @@ export interface HookObject {
     [operationName: string]: {
         before?: any;
         after?: any;
-    }
+    };
 }
 
 export interface OperationFactoryConfig {
