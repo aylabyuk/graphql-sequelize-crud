@@ -40,6 +40,7 @@ import {
     ModelTypes,
 } from "./types";
 import { PubSub } from 'graphql-subscriptions/dist/pubsub';
+import { subscriptionName } from './utils';
 
 export class OperationFactory {
 
@@ -174,18 +175,19 @@ export class OperationFactory {
                             }
                         };
                     }
-                });
+                }); 
                 // console.log(`${getTableName(Model)} mutation output`, output);
                 return output;
             },
             mutateAndGetPayload: (data, context) => {
                 const operationName = mutationName(model, 'create');
                 this.checkBeforeHooks({operationName, context});
-
                 convertFieldsFromGlobalId(model, data);
-                return model.create(data).then((data) => {
-                    // this.pubsub.publish('create', data)
-                });
+
+                return model.create(data).then((d) => { 
+                    this.pubsub.publish(subscriptionName(model, 'created'), d.dataValues)
+                    return d.dataValues
+                })
             }
         });
 
@@ -422,7 +424,11 @@ export class OperationFactory {
                             where,
                             affectedCount: result[0]
                         };
-                    });
+                    })
+                    
+                    // .then((d) => {
+                    //     return d
+                    // })
             }
         });
 

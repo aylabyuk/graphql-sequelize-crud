@@ -39,15 +39,13 @@ import {
     HookObject
 } from "./OperationFactory";
 import {
-    SubscriptionFactory
+    SubscriptionFactory,
+    Subscriptions
 } from "./SubscriptionFactory"
 import {
     getTableName,
     connectionNameForAssociation,
 } from "./utils";
-import { 
-    Subscriptions 
-} from "./SubscriptionFactory";
 import { 
     PubSub 
 } from 'graphql-subscriptions';
@@ -108,6 +106,40 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
         });
         types[getTableName(model)] = modelType;
 
+        // == SUBSCRIPTION ==
+
+        const subscriptionFactory = new SubscriptionFactory({pubsub})
+        
+        subscriptionFactory.created({
+            subscriptions,
+            model,
+            modelType
+        })
+
+        subscriptionFactory.deleted({
+            subscriptions,
+            model,
+            modelType
+        })
+
+        subscriptionFactory.updated({
+            subscriptions,
+            model,
+            modelType
+        })
+
+        subscriptionFactory.deletedOne({
+            subscriptions,
+            model,
+            modelType
+        })
+
+        subscriptionFactory.updatedOne({
+            subscriptions,
+            model,
+            modelType
+        })
+
         // === CRUD ====
         const operationFactory = new OperationFactory({
             cache,
@@ -165,40 +197,6 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
             model,
             modelType,
         });
-
-        // == SUBSCRIPTION ==
-
-        const subscriptionFactory = new SubscriptionFactory({pubsub})
-        
-        subscriptionFactory.created({
-            subscriptions,
-            model,
-            modelType
-        })
-
-        subscriptionFactory.deleted({
-            subscriptions,
-            model,
-            modelType
-        })
-
-        subscriptionFactory.updated({
-            subscriptions,
-            model,
-            modelType
-        })
-
-        subscriptionFactory.deletedOne({
-            subscriptions,
-            model,
-            modelType
-        })
-
-        subscriptionFactory.updatedOne({
-            subscriptions,
-            model,
-            modelType
-        })
 
         return types;
     }, {});

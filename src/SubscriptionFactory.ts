@@ -36,11 +36,14 @@ export class SubscriptionFactory {
         modelType: GraphQLObjectType
         subscriptions: Subscriptions
         }) {
-            const createdSubscriptionName = subscriptionName(model, 'created')
+            const newSubscriptionName = subscriptionName(model, 'created')
 
-            subscriptions[createdSubscriptionName] = {
-                type: createNonNullList(modelType),
-                subscribe: () => this.pubsub.asyncIterator(createdSubscriptionName)
+            subscriptions[newSubscriptionName] = {
+                type: modelType,
+                resolve: (payload) => {
+                    return payload
+                },
+                subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
             }
         } 
 
@@ -53,11 +56,14 @@ export class SubscriptionFactory {
         modelType: GraphQLObjectType
         subscriptions: Subscriptions
         }) {
-            const createdSubscriptionName = subscriptionName(model, 'updated')
+            const newSubscriptionName = subscriptionName(model, 'updated')
 
-            subscriptions[createdSubscriptionName] = {
+            subscriptions[newSubscriptionName] = {
                 type: createNonNullList(modelType),
-                subscribe: () => this.pubsub.asyncIterator(createdSubscriptionName)
+                resolve: (payload) => {
+                    return payload
+                },
+                subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
             }
         } 
     
@@ -70,11 +76,11 @@ export class SubscriptionFactory {
         modelType: GraphQLObjectType
         subscriptions: Subscriptions
         }) {
-            const createdSubscriptionName = subscriptionName(model, 'deleted')
+            const newSubscriptionName = subscriptionName(model, 'deleted')
 
-            subscriptions[createdSubscriptionName] = {
+            subscriptions[newSubscriptionName] = {
                 type: createNonNullList(modelType),
-                subscribe: () => this.pubsub.asyncIterator(createdSubscriptionName)
+                subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
             }
         } 
 
@@ -87,11 +93,11 @@ export class SubscriptionFactory {
         modelType: GraphQLObjectType
         subscriptions: Subscriptions
         }) {
-            const createdSubscriptionName = subscriptionName(model, 'updatedOne')
+            const newSubscriptionName = subscriptionName(model, 'updatedOne')
 
-            subscriptions[createdSubscriptionName] = {
-                type: createNonNullList(modelType),
-                subscribe: () => this.pubsub.asyncIterator(createdSubscriptionName)
+            subscriptions[newSubscriptionName] = {
+                type: modelType,
+                subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
             }
         } 
     
@@ -104,11 +110,11 @@ export class SubscriptionFactory {
         modelType: GraphQLObjectType
         subscriptions: Subscriptions
         }) {
-            const createdSubscriptionName = subscriptionName(model, 'updatedOne')
+            const newSubscriptionName = subscriptionName(model, 'updatedOne')
 
-            subscriptions[createdSubscriptionName] = {
-                type: createNonNullList(modelType),
-                subscribe: () => this.pubsub.asyncIterator(createdSubscriptionName)
+            subscriptions[newSubscriptionName] = {
+                type: modelType,
+                subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
             }
         } 
 }
