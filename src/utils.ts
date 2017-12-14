@@ -161,3 +161,23 @@ export function createNonNullListResolver(resolver: GraphQLFieldResolver<any, an
             });
     };
 }
+
+export function subscriptionName(model: Model, type: string) {
+    switch (type) {
+        case 'created': {
+            return camelcase(`${type}_${getTableName(model)}`);
+        }
+        case 'updated': {
+            return camelcase(`${type}_${getTableName(model)}`);
+        }
+        case 'deleted': {
+            return camelcase(`${type}_${getTableName(model)}`);
+        }
+        case 'updatedOne': {
+            return camelcase(`${type}_${getTableName(model)}`);
+        }
+        case 'deletedOne': {
+            
+        }
+    }
+}
