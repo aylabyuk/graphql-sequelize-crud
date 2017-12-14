@@ -231,13 +231,11 @@ export class OperationFactory {
     public findAll({
         queries,
         model,
-        modelType,
-        hooks
+        modelType
     }: {
             model: Model;
             modelType: GraphQLObjectType;
             queries: Queries;
-            hooks?: HookObject;
         }) {
         const findAllQueryName = queryName(model, 'findAll');
 

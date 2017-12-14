@@ -92,6 +92,7 @@
   "dependencies": {
     "bluebird": "^3.4.1",
     "camelcase": "^3.0.0",
+    "graphql-subscriptions": "^0.5.5",
     "lodash": "^4.13.1",
     "pluralize": "^3.0.0"
   },

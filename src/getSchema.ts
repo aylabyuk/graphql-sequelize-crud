@@ -39,9 +39,15 @@ import {
     HookObject
 } from "./OperationFactory";
 import {
+    SubscriptionFactory
+} from "./SubscriptionFactory"
+import {
     getTableName,
     connectionNameForAssociation,
 } from "./utils";
+import { 
+    Subscriptions 
+} from "./SubscriptionFactory";
 
 export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
 
@@ -50,6 +56,7 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
     const models: Models = sequelize.models as any;
     const queries: Queries = {};
     const mutations: Mutations = {};
+    const subscriptions: Subscriptions = {};
     const associationsToModel: AssociationToModels = {};
     const associationsFromModel: AssociationFromModels = {};
     const cache: Cache = {};
@@ -153,6 +160,40 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
             model,
             modelType,
         });
+
+        // == SUBSCRIPTION ==
+
+        const subscriptionFactory = new SubscriptionFactory()
+        
+        subscriptionFactory.created({
+            subscriptions,
+            model,
+            modelType
+        })
+
+        subscriptionFactory.deleted({
+            subscriptions,
+            model,
+            modelType
+        })
+
+        subscriptionFactory.updated({
+            subscriptions,
+            model,
+            modelType
+        })
+
+        subscriptionFactory.deletedOne({
+            subscriptions,
+            model,
+            modelType
+        })
+
+        subscriptionFactory.updatedOne({
+            subscriptions,
+            model,
+            modelType
+        })
 
         return types;
     }, {});
@@ -303,9 +344,17 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
         })
     });
 
+    const subscriptionRoot = new GraphQLObjectType({
+        name: "Subscriptions",
+        fields: () => ({
+            ...subscriptions
+        })
+    });
+
     return new GraphQLSchema({
         query: queryRoot,
-        mutation: mutationRoot
+        mutation: mutationRoot,
+        subscription: subscriptionRoot
     });
 
 }

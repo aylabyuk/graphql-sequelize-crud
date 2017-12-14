@@ -165,19 +165,23 @@ export function createNonNullListResolver(resolver: GraphQLFieldResolver<any, an
 export function subscriptionName(model: Model, type: string) {
     switch (type) {
         case 'created': {
-            return camelcase(`${type}_${getTableName(model)}`);
+            return camelcase(`${getTableName(model)}_${type}`);
         }
         case 'updated': {
-            return camelcase(`${type}_${getTableName(model)}`);
+            return camelcase(`${getTableName(model)}_${type}`);
         }
         case 'deleted': {
-            return camelcase(`${type}_${getTableName(model)}`);
+            return camelcase(`${getTableName(model)}_${type}`);
         }
         case 'updatedOne': {
             return camelcase(`${type}_${getTableName(model)}`);
         }
         case 'deletedOne': {
-            
+            return camelcase(`${type}_${getTableName(model)}`);
+        }
+        default: {
+            console.warn('Unknown subscription type: ', type);
+            return camelcase(`${getTableName(model)}_${type}`);
         }
     }
 }
