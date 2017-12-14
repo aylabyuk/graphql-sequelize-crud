@@ -128,18 +128,6 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
             modelType
         })
 
-        subscriptionFactory.deletedOne({
-            subscriptions,
-            model,
-            modelType
-        })
-
-        subscriptionFactory.updatedOne({
-            subscriptions,
-            model,
-            modelType
-        })
-
         // === CRUD ====
         const operationFactory = new OperationFactory({
             cache,

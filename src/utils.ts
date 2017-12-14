@@ -173,12 +173,6 @@ export function subscriptionName(model: Model, type: string) {
         case 'deleted': {
             return camelcase(`${getTableName(model)}_${type}`);
         }
-        case 'updatedOne': {
-            return camelcase(`${type}_${getTableName(model)}`);
-        }
-        case 'deletedOne': {
-            return camelcase(`${type}_${getTableName(model)}`);
-        }
         default: {
             console.warn('Unknown subscription type: ', type);
             return camelcase(`${getTableName(model)}_${type}`);

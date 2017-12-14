@@ -184,9 +184,9 @@ export class OperationFactory {
                 this.checkBeforeHooks({operationName, context});
                 convertFieldsFromGlobalId(model, data);
 
-                return model.create(data).then((d) => { 
-                    this.pubsub.publish(subscriptionName(model, 'created'), d.dataValues)
-                    return d.dataValues
+                return model.create(data).then((result) => { 
+                    this.pubsub.publish(subscriptionName(model, 'created'), result.dataValues)
+                    return result.dataValues
                 })
             }
         });
@@ -425,13 +425,6 @@ export class OperationFactory {
                             where,
                             affectedCount: result[0]
                         };
-                    }).then((d) => {
-
-                        model.findAll({ where: values }).then((dat) => {
-                            console.log('UPDATED ROWS', dat.dataValues)
-                            this.pubsub.publish(subscriptionName(model, 'updated'), d)
-                        })
-                        return d
                     })
             }
         });
@@ -569,6 +562,14 @@ export class OperationFactory {
                 })
                     .then((result) => {
                         return where;
+                    }).then((result) => {
+
+                        model.find({ where }).then((res) => {
+                            console.log("RESULT: ", res.dataValues)
+                            this.pubsub.publish(subscriptionName(model, 'updated'), res.dataValues)
+                        })
+                        
+                        return result
                     });
 
             }

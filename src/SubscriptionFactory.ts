@@ -15,9 +15,6 @@ import {
 import {
     PubSub
 } from 'graphql-subscriptions'
-import { 
-    createNonNullList 
-} from "./utils";
 
 export class SubscriptionFactory {
 
@@ -59,7 +56,7 @@ export class SubscriptionFactory {
             const newSubscriptionName = subscriptionName(model, 'updated')
 
             subscriptions[newSubscriptionName] = {
-                type: createNonNullList(modelType),
+                type: modelType,
                 resolve: (payload) => {
                     return payload
                 },
@@ -79,41 +76,10 @@ export class SubscriptionFactory {
             const newSubscriptionName = subscriptionName(model, 'deleted')
 
             subscriptions[newSubscriptionName] = {
-                type: createNonNullList(modelType),
-                subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
-            }
-        } 
-
-    public updatedOne({
-        subscriptions,
-        model,
-        modelType
-    }: {
-        model: Model,
-        modelType: GraphQLObjectType
-        subscriptions: Subscriptions
-        }) {
-            const newSubscriptionName = subscriptionName(model, 'updatedOne')
-
-            subscriptions[newSubscriptionName] = {
                 type: modelType,
-                subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
-            }
-        } 
-    
-    public deletedOne({
-        subscriptions,
-        model,
-        modelType
-    }: {
-        model: Model,
-        modelType: GraphQLObjectType
-        subscriptions: Subscriptions
-        }) {
-            const newSubscriptionName = subscriptionName(model, 'updatedOne')
-
-            subscriptions[newSubscriptionName] = {
-                type: modelType,
+                resolve: (payload) => {
+                    return payload
+                },
                 subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
             }
         } 
