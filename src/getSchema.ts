@@ -48,6 +48,9 @@ import {
 import { 
     Subscriptions 
 } from "./SubscriptionFactory";
+import { 
+    PubSub 
+} from 'graphql-subscriptions';
 
 export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
 
@@ -60,6 +63,7 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
     const associationsToModel: AssociationToModels = {};
     const associationsFromModel: AssociationFromModels = {};
     const cache: Cache = {};
+    const pubsub = new PubSub
 
     // Create types map
     const modelTypes: ModelTypes = Object.keys(models).reduce((types: ModelTypes, key: string) => {
@@ -111,7 +115,8 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
             modelTypes: types,
             associationsFromModel,
             associationsToModel,
-            hooks
+            hooks,
+            pubsub
         });
         // CREATE single
         operationFactory.createRecord({
@@ -163,7 +168,7 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
 
         // == SUBSCRIPTION ==
 
-        const subscriptionFactory = new SubscriptionFactory()
+        const subscriptionFactory = new SubscriptionFactory({pubsub})
         
         subscriptionFactory.created({
             subscriptions,

@@ -20,7 +20,12 @@ import {
 } from "./utils";
 
 export class SubscriptionFactory {
-    private pubsub = new PubSub()
+
+    private pubsub: PubSub;
+
+    constructor(config: SubscriptionFactoryConfig) {
+        this.pubsub = config.pubsub;
+    }
 
     public created({
         subscriptions,
@@ -106,6 +111,10 @@ export class SubscriptionFactory {
                 subscribe: () => this.pubsub.asyncIterator(createdSubscriptionName)
             }
         } 
+}
+
+export interface SubscriptionFactoryConfig {
+    pubsub: PubSub
 }
 
 export interface Subscriptions extends GraphQLFieldConfigMap<any, any> {

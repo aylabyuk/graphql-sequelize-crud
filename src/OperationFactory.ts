@@ -39,6 +39,7 @@ import {
     ModelsHashInterface as Models,
     ModelTypes,
 } from "./types";
+import { PubSub } from 'graphql-subscriptions/dist/pubsub';
 
 export class OperationFactory {
 
@@ -48,6 +49,7 @@ export class OperationFactory {
     private associationsFromModel: AssociationFromModels;
     private cache: Cache;
     private hooks?: HookObject;
+    private pubsub: PubSub;
 
     private checkBeforeHooks({
         operationName,
@@ -73,6 +75,7 @@ export class OperationFactory {
         this.associationsFromModel = config.associationsFromModel;
         this.cache = config.cache;
         this.hooks = config.hooks;
+        this.pubsub = config.pubsub;
     }
 
     public createRecord({
@@ -180,7 +183,9 @@ export class OperationFactory {
                 this.checkBeforeHooks({operationName, context});
 
                 convertFieldsFromGlobalId(model, data);
-                return model.create(data);
+                return model.create(data).then((data) => {
+                    // this.pubsub.publish('create', data)
+                });
             }
         });
 
@@ -727,4 +732,5 @@ export interface OperationFactoryConfig {
     associationsFromModel: AssociationFromModels;
     cache: Cache;
     hooks?: HookObject;
+    pubsub: PubSub;
 }
