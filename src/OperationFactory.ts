@@ -416,6 +416,7 @@ export class OperationFactory {
                 const { values, where } = data;
                 convertFieldsFromGlobalId(model, values);
                 convertFieldsFromGlobalId(model, where);
+
                 return model.update(values, {
                     where
                 })
@@ -424,11 +425,14 @@ export class OperationFactory {
                             where,
                             affectedCount: result[0]
                         };
+                    }).then((d) => {
+
+                        model.findAll({ where: values }).then((dat) => {
+                            console.log('UPDATED ROWS', dat.dataValues)
+                            this.pubsub.publish(subscriptionName(model, 'updated'), d)
+                        })
+                        return d
                     })
-                    
-                    // .then((d) => {
-                    //     return d
-                    // })
             }
         });
 
