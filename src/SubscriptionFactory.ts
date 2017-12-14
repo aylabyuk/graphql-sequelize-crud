@@ -8,13 +8,13 @@ import {
     GraphQLFieldConfigMap,
     GraphQLFieldConfig,
     GraphQLObjectType
-} from 'graphql'
+} from 'graphql';
 import {
     subscriptionName
-} from './utils'
+} from './utils';
 import {
     PubSub
-} from 'graphql-subscriptions'
+} from 'graphql-subscriptions';
 
 export class SubscriptionFactory {
 
@@ -33,16 +33,16 @@ export class SubscriptionFactory {
         modelType: GraphQLObjectType
         subscriptions: Subscriptions
         }) {
-            const newSubscriptionName = subscriptionName(model, 'created')
+            const newSubscriptionName = subscriptionName(model, 'created');
 
             subscriptions[newSubscriptionName] = {
                 type: modelType,
                 resolve: (payload) => {
-                    return payload
+                    return payload;
                 },
                 subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
-            }
-        } 
+            };
+        }
 
     public updated({
         subscriptions,
@@ -53,17 +53,17 @@ export class SubscriptionFactory {
         modelType: GraphQLObjectType
         subscriptions: Subscriptions
         }) {
-            const newSubscriptionName = subscriptionName(model, 'updated')
+            const newSubscriptionName = subscriptionName(model, 'updated');
 
             subscriptions[newSubscriptionName] = {
                 type: modelType,
                 resolve: (payload) => {
-                    return payload
+                    return payload;
                 },
                 subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
-            }
-        } 
-    
+            };
+        }
+
     public deleted({
         subscriptions,
         model,
@@ -73,20 +73,23 @@ export class SubscriptionFactory {
         modelType: GraphQLObjectType
         subscriptions: Subscriptions
         }) {
-            const newSubscriptionName = subscriptionName(model, 'deleted')
+            const newSubscriptionName = subscriptionName(model, 'deleted');
 
             subscriptions[newSubscriptionName] = {
                 type: modelType,
                 resolve: (payload) => {
-                    return payload
+                    console.log(payload);
+                    return {
+                        payload
+                    };
                 },
                 subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
-            }
-        } 
+            };
+        }
 }
 
 export interface SubscriptionFactoryConfig {
-    pubsub: PubSub
+    pubsub: PubSub;
 }
 
 export interface Subscriptions extends GraphQLFieldConfigMap<any, any> {

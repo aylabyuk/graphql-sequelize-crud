@@ -33,6 +33,7 @@ import {
     globalIdInputField,
     createNonNullList,
     createNonNullListResolver,
+    subscriptionName
 } from "./utils";
 import {
     Model,
@@ -40,7 +41,6 @@ import {
     ModelTypes,
 } from "./types";
 import { PubSub } from 'graphql-subscriptions/dist/pubsub';
-import { subscriptionName } from './utils';
 
 export class OperationFactory {
 
@@ -175,7 +175,7 @@ export class OperationFactory {
                             }
                         };
                     }
-                }); 
+                });
                 // console.log(`${getTableName(Model)} mutation output`, output);
                 return output;
             },
@@ -184,10 +184,10 @@ export class OperationFactory {
                 this.checkBeforeHooks({operationName, context});
                 convertFieldsFromGlobalId(model, data);
 
-                return model.create(data).then((result) => { 
-                    this.pubsub.publish(subscriptionName(model, 'created'), result.dataValues)
-                    return result.dataValues
-                })
+                return model.create(data).then((result) => {
+                    this.pubsub.publish(subscriptionName(model, 'created'), result.dataValues);
+                    return result.dataValues;
+                });
             }
         });
 
@@ -425,7 +425,7 @@ export class OperationFactory {
                             where,
                             affectedCount: result[0]
                         };
-                    })
+                    });
             }
         });
 
@@ -565,11 +565,10 @@ export class OperationFactory {
                     }).then((result) => {
 
                         model.find({ where }).then((res) => {
-                            console.log("RESULT: ", res.dataValues)
-                            this.pubsub.publish(subscriptionName(model, 'updated'), res.dataValues)
-                        })
-                        
-                        return result
+                            this.pubsub.publish(subscriptionName(model, 'updated'), res.dataValues);
+                        });
+
+                        return result;
                     });
 
             }
@@ -683,6 +682,7 @@ export class OperationFactory {
                     where
                 })
                     .then((affectedCount) => {
+                        this.pubsub.publish(subscriptionName(model, 'deleted'), data);
                         return data;
                     });
             }

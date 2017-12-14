@@ -41,13 +41,13 @@ import {
 import {
     SubscriptionFactory,
     Subscriptions
-} from "./SubscriptionFactory"
+} from "./SubscriptionFactory";
 import {
     getTableName,
     connectionNameForAssociation,
 } from "./utils";
-import { 
-    PubSub 
+import {
+    PubSub
 } from 'graphql-subscriptions';
 
 export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
@@ -61,7 +61,7 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
     const associationsToModel: AssociationToModels = {};
     const associationsFromModel: AssociationFromModels = {};
     const cache: Cache = {};
-    const pubsub = new PubSub
+    const pubsub = new PubSub;
 
     // Create types map
     const modelTypes: ModelTypes = Object.keys(models).reduce((types: ModelTypes, key: string) => {
@@ -108,25 +108,25 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
 
         // == SUBSCRIPTION ==
 
-        const subscriptionFactory = new SubscriptionFactory({pubsub})
-        
+        const subscriptionFactory = new SubscriptionFactory({pubsub});
+
         subscriptionFactory.created({
             subscriptions,
             model,
             modelType
-        })
+        });
 
         subscriptionFactory.deleted({
             subscriptions,
             model,
             modelType
-        })
+        });
 
         subscriptionFactory.updated({
             subscriptions,
             model,
             modelType
-        })
+        });
 
         // === CRUD ====
         const operationFactory = new OperationFactory({

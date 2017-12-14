@@ -131,34 +131,11 @@ export function queryName(model: Model, type: string) {
     }
 }
 
-export function getTableName(model: Model): string {
-    return (<any>model).name;
-}
-
 export function globalIdInputField(modelName: string): GraphQLInputField {
     return {
         name: 'id',
         description: `The ID for ${modelName}`,
         type: new GraphQLNonNull(GraphQLID),
-    };
-}
-
-export function createNonNullList<T extends GraphQLInputType | GraphQLType>(modelType: T): T {
-    return new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(modelType))) as any;
-}
-
-export function createNonNullListResolver(resolver: GraphQLFieldResolver<any, any>): GraphQLFieldResolver<any, any> {
-    // tslint:disable-next-line:max-func-args
-    return (source: any, args: any, context: any, info: any) => {
-        return Promise.resolve(resolver(source, args, context, info))
-            .then((results: null | object | object[]) => {
-                if (results === null || results === undefined) {
-                    return [];
-                } else if (Array.isArray(results)) {
-                    return results;
-                }
-                return [results];
-            });
     };
 }
 
@@ -178,4 +155,27 @@ export function subscriptionName(model: Model, type: string) {
             return camelcase(`${getTableName(model)}_${type}`);
         }
     }
+}
+
+export function getTableName(model: Model): string {
+    return (<any>model).name;
+}
+
+export function createNonNullList<T extends GraphQLInputType | GraphQLType>(modelType: T): T {
+    return new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(modelType))) as any;
+}
+
+export function createNonNullListResolver(resolver: GraphQLFieldResolver<any, any>): GraphQLFieldResolver<any, any> {
+    // tslint:disable-next-line:max-func-args
+    return (source: any, args: any, context: any, info: any) => {
+        return Promise.resolve(resolver(source, args, context, info))
+            .then((results: null | object | object[]) => {
+                if (results === null || results === undefined) {
+                    return [];
+                } else if (Array.isArray(results)) {
+                    return results;
+                }
+                return [results];
+            });
+    };
 }
