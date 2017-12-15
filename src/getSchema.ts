@@ -62,20 +62,20 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
     const associationsToModel: AssociationToModels = {};
     const associationsFromModel: AssociationFromModels = {};
     const cache: Cache = {};
-    const pubsub = new PubSub;
+    const pubsub: PubSub = new PubSub();
 
     // Create types map
     const modelTypes: ModelTypes = Object.keys(models).reduce((types: ModelTypes, key: string) => {
         const model: Model = models[key];
         const idOnlyType = new GraphQLObjectType({
-            name: getTableName(model) + 'ID',
+            name: `${getTableName(model)}ID`,
             description: `ID for the deleted ${getTableName(model)}`,
             fields: () => ({
                 id: {
                     type: GraphQLID
                 }
             })
-        })
+        });
         const modelType = new GraphQLObjectType({
             name: getTableName(model),
             fields: () => {

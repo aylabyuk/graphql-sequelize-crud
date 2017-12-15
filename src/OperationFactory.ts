@@ -565,10 +565,10 @@ export class OperationFactory {
                     }).then((result) => {
 
                         model.find({ where }).then((res) => {
-                            if(!res) { return }
+                            if (!res) { return; }
                             this.pubsub.publish(subscriptionName(model, 'updated'), res.dataValues);
                         });
-                        
+
                         return result;
                     });
 
@@ -683,8 +683,8 @@ export class OperationFactory {
                     where
                 })
                     .then((affectedCount) => {
-                        if(!affectedCount) {
-                            throw new Error('Nothing to delete')
+                        if (!affectedCount) {
+                            throw new Error('Nothing to delete');
                         }
 
                         this.pubsub.publish(subscriptionName(model, 'deleted'), data);
