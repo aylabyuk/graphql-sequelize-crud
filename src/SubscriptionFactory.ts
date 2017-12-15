@@ -67,21 +67,18 @@ export class SubscriptionFactory {
     public deleted({
         subscriptions,
         model,
-        modelType
+        idOnlyType
     }: {
         model: Model,
-        modelType: GraphQLObjectType
+        idOnlyType: GraphQLObjectType
         subscriptions: Subscriptions
         }) {
             const newSubscriptionName = subscriptionName(model, 'deleted');
 
             subscriptions[newSubscriptionName] = {
-                type: modelType,
+                type: idOnlyType,
                 resolve: (payload) => {
-                    console.log(payload);
-                    return {
-                        payload
-                    };
+                    return payload;
                 },
                 subscribe: () => this.pubsub.asyncIterator(newSubscriptionName)
             };

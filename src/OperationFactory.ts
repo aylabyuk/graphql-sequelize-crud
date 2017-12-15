@@ -682,6 +682,14 @@ export class OperationFactory {
                     where
                 })
                     .then((affectedCount) => {
+                        if(!affectedCount) {
+                            throw new Error('Nothing to delete')
+                        }
+
+                        // var dataToPublish = data
+
+                        // convertFieldsFromGlobalId(model, dataToPublish)
+
                         this.pubsub.publish(subscriptionName(model, 'deleted'), data);
                         return data;
                     });

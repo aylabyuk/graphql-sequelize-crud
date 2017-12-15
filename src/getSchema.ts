@@ -49,6 +49,7 @@ import {
 import {
     PubSub
 } from 'graphql-subscriptions';
+import { GraphQLID } from 'graphql/type/scalars';
 
 export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
 
@@ -66,6 +67,14 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
     // Create types map
     const modelTypes: ModelTypes = Object.keys(models).reduce((types: ModelTypes, key: string) => {
         const model: Model = models[key];
+        const idOnlyType = new GraphQLObjectType({
+            name: getTableName(model) + 'ID',
+            fields: () => ({
+                id: {
+                    type: GraphQLID
+                }
+            })
+        })
         const modelType = new GraphQLObjectType({
             name: getTableName(model),
             fields: () => {
@@ -119,7 +128,7 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
         subscriptionFactory.deleted({
             subscriptions,
             model,
-            modelType
+            idOnlyType
         });
 
         subscriptionFactory.updated({
