@@ -69,6 +69,7 @@ export function getSchema(sequelize: Sequelize, hooks?: HookObject) {
         const model: Model = models[key];
         const idOnlyType = new GraphQLObjectType({
             name: getTableName(model) + 'ID',
+            description: `ID for the deleted ${getTableName(model)}`,
             fields: () => ({
                 id: {
                     type: GraphQLID

@@ -686,10 +686,6 @@ export class OperationFactory {
                             throw new Error('Nothing to delete')
                         }
 
-                        // var dataToPublish = data
-
-                        // convertFieldsFromGlobalId(model, dataToPublish)
-
                         this.pubsub.publish(subscriptionName(model, 'deleted'), data);
                         return data;
                     });
